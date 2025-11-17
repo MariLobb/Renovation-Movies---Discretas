@@ -6,6 +6,8 @@ async function getMovies() {
   const host = h.get("host");
   const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
+  console.log("HOST:", host);
+
   const res = await fetch(`${protocol}://${host}/api/movies`, {
     cache: "no-store",
   });
