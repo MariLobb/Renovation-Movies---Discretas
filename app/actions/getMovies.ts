@@ -15,7 +15,10 @@ function isValidMovie(movie: Movie): boolean {
     movie.genres &&
     movie.genres.length >= 1 && // al menos un género
     movie.extract !== "" && // sinopsis
-    movie.thumbnail !== "" // poster
+    movie.thumbnail !== "" && // poster
+    ["title", "year", "cast", "cast", "genres", "extract", "thumbnail"].every(
+      (key) => key in movie
+    )
   );
 }
 
@@ -37,7 +40,6 @@ export async function getMovies(page = 1, limit = 20) {
 
   // Por ahora devolvemos solo los primeros 50
   return {
-    page,
     total: filtered.length,
     data: paginated,
   };
