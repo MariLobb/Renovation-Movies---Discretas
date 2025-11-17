@@ -26,11 +26,13 @@ export async function getTotalMoviesCount(
 
 function filterMovies(query: string, genreIds: number[]) {
   return movies.filter((movie) => {
-    const matchesTitle = movie.title
-      .toLowerCase()
-      .includes(query.toLowerCase());
     const matchesGenre =
       genreIds.length === 0 || genreIds.some((id) => movie.genres.includes(id));
-    return matchesTitle && matchesGenre;
+    return matchesTitle(movie.title, query) && matchesGenre;
   });
+}
+
+function matchesTitle(title: string, search: string) {
+  if (!search.trim()) return true;
+  return title.toLowerCase().includes(search.toLowerCase());
 }
