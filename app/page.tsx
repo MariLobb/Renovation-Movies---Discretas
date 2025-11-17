@@ -2,15 +2,16 @@ import { MovieTitle } from "@/types/api";
 import { headers } from "next/headers";
 
 async function getMovies() {
-  const h = await headers();
-  const host = h.get("host");
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+  const url = `${protocol}://${host}/api/movies`;
 
-  console.log("HOST:", host);
+  const res = await fetch(url, { cache: "no-store" });
 
-  const res = await fetch(`${protocol}://${host}/api/movies`, {
-    cache: "no-store",
-  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch movies");
+  }
 
   return res.json();
 }
