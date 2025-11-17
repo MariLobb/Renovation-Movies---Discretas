@@ -1,15 +1,14 @@
 import { MovieTitle } from "@/types/api";
-import { headers } from "next/headers";
 import { getMovies } from "./actions/getMovies";
 
 export default async function Home() {
-  const movies = await getMovies();
+  const { data } = await getMovies(3, 20);
 
   return (
     <main style={{ padding: 20 }}>
       <h1>Películas</h1>
       <ul>
-        {movies.map((movie: MovieTitle) => (
+        {data.map((movie: MovieTitle) => (
           <li key={movie.id}>{movie.title}</li>
         ))}
       </ul>
