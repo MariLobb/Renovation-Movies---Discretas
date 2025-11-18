@@ -25,14 +25,18 @@ export async function getTotalMoviesCount(
 }
 
 function filterMovies(query: string, genreIds: number[]) {
-  return movies.filter((movie) => {
-    const matchesGenre =
-      genreIds.length === 0 || genreIds.some((id) => movie.genres.includes(id));
-    return matchesTitle(movie.title, query) && matchesGenre;
-  });
+  return movies.filter(
+    (movie) =>
+      matchesTitle(movie.title, query) && matchesGenres(movie.genres, genreIds)
+  );
 }
 
 function matchesTitle(title: string, search: string) {
-  if (!search.trim()) return true;
+  if (!search.trim()) return true; // Si la búsqueda está vacía, coincide con todo
   return title.toLowerCase().includes(search.toLowerCase());
+}
+
+function matchesGenres(movieGenres: number[], selected: number[]) {
+  if (selected.length === 0) return true; // Si no hay géneros seleccionados, coincide con todo
+  return selected.every((g) => movieGenres.includes(g));
 }

@@ -1,6 +1,6 @@
 "use client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Pagination({
   page,
@@ -12,6 +12,7 @@ export default function Pagination({
   total: number;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const startIndex = (page - 1) * limit + 1;
   const endIndex = Math.min(startIndex + limit - 1, total);
@@ -20,7 +21,7 @@ export default function Pagination({
   const leftDisabled = page === 1;
 
   const goToPage = (newPage: number) => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams);
     params.set("page", String(newPage));
     router.push(`/?${params.toString()}`);
   };
