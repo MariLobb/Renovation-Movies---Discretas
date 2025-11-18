@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "lib": ["ES2021", "DOM"],
-    "types": ["node"]
+    "types": ["node", "express", "cors"]
   },
   "include": ["src/**/*.ts"]
 }
