@@ -13,6 +13,7 @@ function langToTmdb(lang: string){
 async function tmdbGet(path: string, params: Record<string, any>={}){
   const qp = new URLSearchParams({ api_key: API_KEY, ...Object.fromEntries(Object.entries(params).filter(([_,v])=>v!==undefined && v!==null)) });
   const url = `${API}${path}?${qp.toString()}`;
+  console.log(url);
   const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
   if(!res.ok) throw new Error(`TMDb error ${res.status}`);
   return res.json();
