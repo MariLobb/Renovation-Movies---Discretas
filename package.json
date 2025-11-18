@@ -1,28 +1,21 @@
+
 {
-  "name": "movie-graph-recommender",
-  "version": "0.1.0",
-  "private": true,
+  "name": "rennovatios-movies-tmdb",
+  "version": "3.0.0",
+  "type": "module",
+  "description": "Recomendador de películas (TMDb + Wikipedia + Pageviews) basado en grafos con BFS/Dijkstra y combobox de géneros.",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "build": "tsc -p .",
+    "dev": "tsx src/server.ts",
+    "start": "node dist/server.js"
   },
   "dependencies": {
-    "next": "16.0.1",
-    "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.1",
-    "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.6.2",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.3"
   }
 }

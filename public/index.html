@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recomendador (TMDb + Wikipedia)</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .overlay{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; padding:1rem; z-index:50;}
+    .overlay.show{display:flex; animation:fadeIn .18s ease-out both}
+    .modal-card{width:min(100%, 980px); background:#0b1220; color:#e2e8f0; border:1px solid #1f2937; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.4); overflow:hidden; transform:scale(.96); opacity:0; animation:scaleIn .22s ease-out .07s both}
+    .modal-head{display:flex; justify-content:space-between; align-items:center; padding:.8rem 1rem; border-bottom:1px solid #1f2937}
+    .modal-body{display:grid; grid-template-columns: 240px 1fr; gap:1rem; padding:1rem}
+    .modal-poster{width:100%; border-radius:12px}
+    .modal-meta h2{margin:.2rem 0}
+    .modal-meta small{color:#9ca3af}
+    .chips{display:flex; flex-wrap:wrap; gap:.4rem; margin:.4rem 0}
+    .chip{background:#0b1220; border:1px solid #334155; color:#cbd5e1; padding:.2rem .6rem; border-radius:999px; font-size:.82rem}
+    .reasons{margin-top:.4rem; color:#9ca3af; font-size:.9rem}
+    .close-btn{background:transparent; border:1px solid #334155; color:#e2e8f0; border-radius:10px; padding:.3rem .6rem; cursor:pointer}
+    .close-btn:hover{background:#111827}
+    @keyframes scaleIn{from{transform:scale(.96); opacity:0} to{transform:scale(1); opacity:1}}
+    @keyframes fadeIn{from{opacity:0} to{opacity:1}}
+    @media (max-width: 720px){ .modal-body{grid-template-columns: 1fr} }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Recomendador de Películas</h1>
+  <p>TMDb + Wikipedia + Pageviews · Grafo (BFS/Dijkstra)</p>
+</header>
+<main>
+  <section class="card">
+    <h2>1) Detalles de la recomendación</h2>
+    <div class="grid">
+      <label>Género <select id="genre"></select></label>
+      <label>Año mínimo <input id="minYear" type="number" value="2018"></label>
+      <label>Año máximo <input id="maxYear" type="number" placeholder="(opcional)"></label>
+      <label>Cantidad de peliculas a comparar <input id="limit" type="number" placeholder="(opcional, máx. 1000)"></label>
+      <label>Idioma <input id="lang" type="text" value="es"></label>
+    </div>
+    <div class="grid">
+      <button id="btnLoadGenres">Consultar géneros</button>
+      <button id="btnSeed">Consultar películas</button>
+      <span id="seedMsg" class="msg"></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2) Selecciona tus preferencias </h2>
+    <div class="seed-toolbar" style="display:flex;gap:.6rem;align-items:center;margin:.6rem 0">
+      <input id="seedFilter" class="seed-search" type="text" placeholder="Buscar película en la lista..." style="flex:1">
+      <button id="btnSaveSeeds">Guardar preferencias</button>
+      <span id="selMsg" class="msg"></span>
+    </div>
+    <div id="seedList" class="list"></div>
+  </section>
+
+  <section class="card">
+    <h2>3) Realizar conexiones</h2>
+    <button id="btnGraph">Conectar películas</button>
+    <span id="graphMsg" class="msg"></span>
+  </section>
+
+ <section class="card">
+    <h2>4) Recomendaciones</h2>
+    <div class="grid">
+      <label>Algoritmo
+        <select id="algo">
+          <option value="dijkstra">Dijkstra (ponderado)</option>
+        </select>
+      </label>
+      <!-- NUEVO: campo para cantidad de recomendaciones -->
+      <label>Cantidad (k)
+        <input id="k" type="number" min="1" max="50" value="5" placeholder="(1–50)">
+      </label>
+    </div>
+    <button id="btnRecommend">Obtener recomendaciones</button>
+    <div id="reco"></div>
+  </section>
+</main>
+
+<div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <strong id="modalTitle">Detalles</strong>
+      <div style="display:flex; gap:.5rem">
+        <a id="modalWiki" target="_blank" rel="noopener" class="close-btn">Wikipedia</a>
+        <button id="modalClose" class="close-btn" aria-label="Cerrar">Cerrar ✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <img id="modalPoster" class="modal-poster" alt="Poster">
+      <div class="modal-meta">
+        <h2 id="modalName"></h2>
+        <small id="modalYear"></small>
+        <div id="modalChips" class="chips"></div>
+        <p id="modalExtract" style="margin:.4rem 0"></p>
+        <p id="modalCast" style="margin:.2rem 0"></p>
+        <div id="modalReasons" class="reasons"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js" type="module"></script>
+</body>
+</html>

@@ -1,7 +1,39 @@
-Para comenzar, primero debes instalar Node.js, que es el entorno necesario para ejecutar JavaScript fuera del navegador y trabajar con frameworks como Next.js. Para hacerlo, entra a la página oficial [https://nodejs.org](https://nodejs.org) y descarga la versión LTS (la recomendada). Una vez descargado el instalador, ejecútalo y sigue los pasos del asistente hasta completar la instalación. Al finalizar, abre la terminal (puede ser el símbolo del sistema o PowerShell en Windows) y escribe el comando `node -v` para verificar que Node.js se instaló correctamente. También ejecuta `npm -v` para confirmar que tienes instalado npm, que es el gestor de paquetes que viene incluido con Node.js. Si ambos comandos muestran un número de versión, la instalación fue exitosa.
 
-Ahora, debes clonar el repositorio del proyecto desde GitHub hacia una carpeta ya existente en tu escritorio. Primero, abre la terminal y navega hasta esa carpeta usando el comando `cd`, por ejemplo: `cd "C:\Users\TuUsuario\Desktop\MiCarpeta"`. Luego, copia la URL del repositorio desde GitHub (debe terminar en `.git`) y escribe el comando `git clone URL_DEL_REPOSITORIO .` (no olvides el punto al final, ya que indica que el contenido del repositorio se descargará directamente dentro de la carpeta actual sin crear una subcarpeta nueva). Espera a que el proceso termine; cuando veas los archivos del proyecto en tu carpeta, el repositorio habrá sido clonado correctamente.
+# Recomendador de Películas (TMDb + Wikipedia)
 
-Una vez que tienes el proyecto, abre Visual Studio Code. Si aún no lo tienes, descárgalo desde [https://code.visualstudio.com](https://code.visualstudio.com) e instálalo. Dentro de VS Code, selecciona “Archivo > Abrir carpeta” y elige la carpeta del proyecto. Luego, abre una nueva terminal desde VS Code (menú “Terminal > Nueva terminal”) y asegúrate de estar en la carpeta raíz del proyecto. Ejecuta el comando `npm install` para que npm descargue todas las dependencias necesarias del archivo `package.json`. Esto puede tardar unos minutos según la cantidad de paquetes que el proyecto utilice.
+**Sin WDQS** para evitar timeouts. Usamos:
+- **TMDb API v3** para datos de películas, géneros, reparto y **pósters/backdrops** (imágenes).
+- **Wikipedia Action API** para extracto y URL pública.
+- **Wikimedia Analytics (Pageviews)** para popularidad de artículos.
 
-Finalmente, para instalar Next.js y asegurarte de que el entorno esté completo, ejecuta `npm install next react react-dom` (esto instala Next y sus dependencias principales). Cuando termine, podrás iniciar el servidor de desarrollo escribiendo `npm run dev`. Si todo está correcto, verás en la terminal un mensaje indicando que el proyecto se está ejecutando, normalmente en la dirección `http://localhost:3000`. Abre ese enlace en tu navegador y verás el sistema funcionando. A partir de ese momento, ya puedes editar el código desde VS Code y ver los cambios reflejados en tiempo real en el navegador.
+Referencias:
+- Cómo construir URLs de imágenes (TMDb **/configuration** e imagen base_url / tamaños).  
+  https://developer.themoviedb.org/docs/image-basics  
+  https://developer.themoviedb.org/reference/configuration-details  
+- Lista oficial de géneros: **/genre/movie/list**.  
+  https://developer.themoviedb.org/reference/genre-movie-list  
+- Descubrimiento de películas: **/discover/movie** (con `with_genres`, `primary_release_date.gte`, `sort_by=popularity.desc`).  
+  https://developer.themoviedb.org/reference/discover-movie  
+- Unir respuestas (detalles+créditos) con **append_to_response=credits**.  
+  https://developer.themoviedb.org/docs/append-to-response  
+- Wikipedia Action API (extractos/miniaturas/info).  
+  https://www.mediawiki.org/wiki/API:Action_API  
+- Pageviews per‑article.  
+  https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/
+
+## Ejecutar
+```bash
+npm i
+cp .env.example .env
+# Pon tu TMDB_API_KEY y opcionalmente APP_LANG=es (usa es-ES internamente para TMDb)
+
+npm run dev
+# http://localhost:5173
+```
+
+## Flujo de la app
+1) **Cargar géneros** (TMDb) y **Descargar semilla** (Discover por año/genre).  
+2) Selecciona **≥10** películas semilla.  
+3) **Construir grafo** (actor>género).  
+4) **Recomendar** (BFS/Dijkstra): score 0–5 + Pageviews + razones.  
+5) **Camino mínimo** (BFS) entre dos títulos.
