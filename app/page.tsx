@@ -22,7 +22,7 @@ export default async function Home({
     : [];
 
   const page = Number(search.page) || 1;
-  const pageSize = 16;
+  const pageSize = 24;
 
   const onlyFavorites = search.favorites === "true";
   const onlyRecommendations = search.recommendations === "true";
@@ -52,7 +52,7 @@ export default async function Home({
       <SearchBar />
       {!onlyRecommendations && <GenreFilter />}
 
-      <div className="bg-white/10 backdrop-blur-md rounded  grid grid-cols-8 gap-4 p-4 md:w-3/4">
+      <div className="bg-white/10 backdrop-blur-md rounded xl:grid-cols-8 lg:grid-cols-6  grid md:grid-cols-4 grid-cols-2 gap-4 p-4 md:w-3/4">
         {finalMovies.map((movie: Movie) => (
           <MovieCard key={movie.id} isLikeable={isLikeable} {...movie} />
         ))}
