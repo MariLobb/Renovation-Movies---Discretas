@@ -6,9 +6,17 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function MovieCard(movie: Movie) {
-  const { title, poster_url, year, id } = movie;
+interface MovieCardProps extends Movie {
+  isLikeable?: boolean;
+}
 
+export default function MovieCard({
+  title,
+  poster_url,
+  year,
+  id,
+  isLikeable = true,
+}: MovieCardProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const router = useRouter();
@@ -66,15 +74,17 @@ export default function MovieCard(movie: Movie) {
 
   return (
     <div className="flex flex-col gap-2 relative w-full rounded-xl overflow-hidden bg-white/10 backdrop-blur-md p-1.5">
-      <button
-        onClick={toggleFavorite}
-        className="absolute z-10 top-2 right-2 p-1.5 bg-black/30 backdrop-blur rounded-full cursor-pointer hover:scale-110 hover:bg-black/50 transition"
-      >
-        <Heart
-          size={18}
-          className={isFavorite ? "fill-red-500 text-red-500" : "text-white"}
-        />
-      </button>
+      {isLikeable && (
+        <button
+          onClick={toggleFavorite}
+          className="absolute z-10 top-2 right-2 p-1.5 bg-black/30 backdrop-blur rounded-full cursor-pointer hover:scale-110 hover:bg-black/50 transition"
+        >
+          <Heart
+            size={18}
+            className={isFavorite ? "fill-red-500 text-red-500" : "text-white"}
+          />
+        </button>
+      )}
       <div className="relative rounded-xl overflow-hidden w-full bg-white/10">
         <Image
           src={poster_url as string}
