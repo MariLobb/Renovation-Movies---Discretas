@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Recomendador de películas (TMDb + Wikipedia + Pageviews) basado en grafos con BFS/Dijkstra y combobox de géneros.",
   "scripts": {
-    "build": "tsc -p .",
+    "build": "npx tsc",
     "dev": "tsx src/server.ts",
     "start": "node dist/server.js"
   },
