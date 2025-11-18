@@ -1,15 +1,15 @@
-
 {
   "compilerOptions": {
     "target": "ES2021",
-    "module": "ES2020",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "lib": ["ES2021", "DOM"],
-    "types": ["node", "express", "cors"]
+    "types": ["node", "express", "cors"],
+    "resolveJsonModule": true
   },
   "include": ["src/**/*.ts"]
 }
