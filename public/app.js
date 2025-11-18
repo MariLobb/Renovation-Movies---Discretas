@@ -159,7 +159,7 @@ document.querySelector('#btnRecommend')?.addEventListener('click', async () => {
       div.className = 'item';
 
       div.innerHTML =
-        `<img src="${r.poster || ''}" style="width:48px;height:auto;border-radius:6px">` +
+        `<img src="${r.poster || ''}" style="width:96px;height:auto;border-radius:24px">` +
         `<div>
             <strong>${r.title}</strong> <span class="badge">${r.year || ''}</span><br>
             <small>Score: ${r.score} · Pageviews: ${r.popularity}</small><br>
