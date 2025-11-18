@@ -4,6 +4,8 @@ import { getFilteredMovies, getTotalMoviesCount } from "./actions/movies";
 import { Movie } from "@/types/movie";
 import SearchBar from "@/components/SearchBar";
 import GenreFilter from "@/components/GenreFilter";
+import { cookies } from "next/headers";
+import ToggleFavorites from "@/components/ToggleFavorites";
 
 export default async function Home({
   searchParams,
@@ -22,13 +24,32 @@ export default async function Home({
   const page = Number(search.page) || 1;
   const pageSize = 16;
 
-  const movies = await getFilteredMovies(query, selectedGenres, page, pageSize);
-  const total = await getTotalMoviesCount(query, selectedGenres);
+  const onlyFavorites = search.onlyFavorites === "true";
+  const cookieStore = cookies();
+  const favoriteIds = JSON.parse(
+    (await cookieStore).get("favorites")?.value || "[]"
+  );
+
+  const movies = await getFilteredMovies(
+    query,
+    selectedGenres,
+    page,
+    pageSize,
+    onlyFavorites,
+    favoriteIds
+  );
+  const total = await getTotalMoviesCount(
+    query,
+    selectedGenres,
+    onlyFavorites,
+    favoriteIds
+  );
 
   return (
     <main className="p-10 flex flex-col gap-4 items-center  min-h-screen">
       <h1 className="">Renovation Movies</h1>
 
+      <ToggleFavorites />
       <SearchBar />
       <GenreFilter />
 

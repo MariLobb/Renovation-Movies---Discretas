@@ -1,10 +1,10 @@
 export interface Movie {
   id: number;
   title: string;
-  year: string | null;
-  rating: number;
-  overview: string;
-  genres: number[];
+  year?: string | null;
+  rating?: number;
+  overview?: string;
+  genres?: number[];
   poster_url: string | null;
   recommendations?: Recommendation[];
 }

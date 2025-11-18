@@ -3,6 +3,7 @@
 import { Movie } from "@/types/movie";
 import { Heart } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function MovieCard(movie: Movie) {
@@ -10,12 +11,31 @@ export default function MovieCard(movie: Movie) {
 
   const [isFavorite, setIsFavorite] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const router = useRouter();
+
+  // Leer favoritos desde cookies
+  const getFavoritesFromCookies = () => {
+    const cookie = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("favorites="));
+
+    if (!cookie) return [];
+
+    try {
+      return JSON.parse(cookie.split("=")[1]);
+    } catch {
+      return [];
+    }
+  };
+
+  // Guardar favoritos en cookies
+  const setFavoritesInCookies = (favorites: number[]) => {
+    document.cookie = `favorites=${JSON.stringify(favorites)}; path=/;`;
+  };
 
   // Toggle favorito
   const toggleFavorite = () => {
-    const stored: number[] = JSON.parse(
-      localStorage.getItem("favorites") || "[]"
-    );
+    const stored: number[] = getFavoritesFromCookies();
 
     let updated;
     if (stored.includes(id)) {
@@ -26,7 +46,9 @@ export default function MovieCard(movie: Movie) {
       setIsFavorite(true);
     }
 
-    localStorage.setItem("favorites", JSON.stringify(updated));
+    setFavoritesInCookies(updated);
+
+    router.refresh();
   };
 
   // Solo indicar que el componente se hidrató (sin leer localStorage aún)
@@ -38,7 +60,7 @@ export default function MovieCard(movie: Movie) {
   useEffect(() => {
     if (!hydrated) return;
 
-    const stored = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const stored = getFavoritesFromCookies();
     setIsFavorite(stored.includes(id));
   }, [id, hydrated]);
 
