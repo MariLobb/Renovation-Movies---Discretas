@@ -79,12 +79,17 @@ export async function recommend({ seeds, algo='bfs', k=5, withPopularity=true }:
   if(withPopularity){ const topNames=feats.sort((a,b)=>b.raw-a.raw).slice(0,50).map(x=>x.title); views = await fetchPageviews(topNames, process.env.APP_LANG||'es'); }
 
   feats.sort((a,b)=> ((b as any).score-(a as any).score) || ((views[b.title]||0)-(views[a.title]||0)) || a.title.localeCompare(b.title));
-  const result = feats.slice(0, k).map(f=>({
-    title: f.title,
-    score: (f as any).score,
-    popularity: views[f.title]||0,
-    reasons: { sharedActors: f.sharedActors, sharedGenres: f.sharedGenres, distance: f.dist },
-    ...movies[f.title]
-  }));
+  const result = feats.slice(0, k).map(f => ({
+  ...movies[f.title],   // spread primero
+  title: f.title,       // tus datos después (sobrescribe el title del movie)
+  score: (f as any).score,
+  popularity: views[f.title] || 0,
+  reasons: {
+    sharedActors: f.sharedActors,
+    sharedGenres: f.sharedGenres,
+    distance: f.dist
+  }
+}));
+
   return result;
 }
